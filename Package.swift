@@ -1,7 +1,9 @@
+// swift-tools-version:5.7
+
 import PackageDescription
 
 let package = Package(
-        name = "SwiftStompClient",
+        name: "SwiftStompClient",
         platforms: [.iOS(.v13)],
         products: [
             .library(name: "SwiftStompClient", targets: ["SwiftStompClient"])
@@ -9,8 +11,7 @@ let package = Package(
         dependencies: [],
         targets: [
             .target(
-                    name: "SwiftStompClient",
-                    path: "SwiftStompClient"
+                    name: "SwiftStompClient"
             )
         ]
 )

@@ -36,7 +36,7 @@ public class WebSocket: NSObject {
     /// - Parameters:
     ///     - onSuccess: success send ping frame
     ///     - onError: error with Error
-    public func webSocketSendPing(onSuccess: @escaping ((Result<Void, Error>) -> Void)) {
+    public func webSocketSendPing(onSuccess: @escaping (Result<Void, Error>) -> Void) {
         sessionWebSocketTask.sendPing(pongReceiveHandler: {
             $0 == nil ? onSuccess(.success(())) : onSuccess(.failure($0!))
         })
@@ -47,7 +47,7 @@ public class WebSocket: NSObject {
     ///     - message: URLSessionWebSocketTask.Message
     ///     - onSuccess: successed send webSocket message
     ///     - onError: error with Error
-    public func webSocketSend(message: URLSessionWebSocketTask.Message, onResult: @escaping ((Result<Void, Error>) -> Void)) {
+    public func webSocketSend(message: URLSessionWebSocketTask.Message, onResult: @escaping (Result<Void, Error>) -> Void) {
         sessionWebSocketTask.send(message, completionHandler: {
             $0 == nil ? onResult(.success(())) : onResult(.failure($0!))
         })
