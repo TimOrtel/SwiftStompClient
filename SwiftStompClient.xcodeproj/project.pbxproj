@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C098ABAFD2E19D0E69E5D23 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C09821693A54C6A7AE89D06 /* Package.swift */; };
+		1C098CEB9E053B8CD757F153 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 1C09865BDE968D58269AD386 /* .gitignore */; };
 		373221D924E3015F0004C746 /* SwiftStompClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 373221D724E3015F0004C746 /* SwiftStompClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		373221F024E302C30004C746 /* DisconnectStompFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373221DF24E302C30004C746 /* DisconnectStompFrame.swift */; };
 		373221F124E302C30004C746 /* BasicCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373221E024E302C30004C746 /* BasicCommands.swift */; };
@@ -51,6 +53,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C09821693A54C6A7AE89D06 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		1C09865BDE968D58269AD386 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		373221D424E3015F0004C746 /* SwiftStompClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftStompClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		373221D724E3015F0004C746 /* SwiftStompClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftStompClient.h; sourceTree = "<group>"; };
 		373221D824E3015F0004C746 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				373221D624E3015F0004C746 /* SwiftStompClient */,
 				3732220624E303940004C746 /* SwiftStompClientExample */,
 				373221D524E3015F0004C746 /* Products */,
+				1C09865BDE968D58269AD386 /* .gitignore */,
+				1C09821693A54C6A7AE89D06 /* Package.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -251,6 +257,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C098CEB9E053B8CD757F153 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +295,7 @@
 				3732220024E302C30004C746 /* CommitStompFrame.swift in Sources */,
 				373221F424E302C30004C746 /* SubscribeStompFrame.swift in Sources */,
 				373221F624E302C30004C746 /* HeartBeat.swift in Sources */,
+				1C098ABAFD2E19D0E69E5D23 /* Package.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
