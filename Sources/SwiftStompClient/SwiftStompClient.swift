@@ -3,14 +3,14 @@ import Foundation
 ///STOMP protocol handle webSocket open/close state for sending CONNECT STOMP frame
 public protocol StompProtocol: class {
     func clientSendFrame(result: Result<Void, Error>)
-    func clientReciveFrame(stomp: SwiftStompClient, frameType: SwiftStompClient.FrameResponseKeys, headers: [String: String], body: String?)
+    func clientReceiveFrame(stomp: SwiftStompClient, frameType: SwiftStompClient.FrameResponseKeys, headers: [String: String], body: String?)
     func handleWebSocketResponse(result: Result<URLSessionWebSocketTask.Message, Error>)
     func handleWebSocketConnect(session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol: String?)
     func handleWebSocketDisconnect(session: URLSession, webSocketTask: URLSessionWebSocketTask, closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?)
 }
 
 public class SwiftStompClient {
-    
+
     ///Basic server frames
     public enum FrameResponseKeys: String {
         case connected = "CONNECTED"
@@ -22,9 +22,9 @@ public class SwiftStompClient {
 
     public let webSocket: WebSocket
     public let heartBeat: HeartBeat?
-    
+
     public weak var stompDelegate: StompProtocol?
-    
+
     ///Init with webSocket
     /// - Parameters:
     ///     - webSocket: WebSocket
@@ -37,26 +37,26 @@ public class SwiftStompClient {
         sendPingFrame()
         sendDisconnectFrame()
     }
-    
+
     private func sendPingFrame() {
         heartBeat?.pingAction = { [weak self] in
             let pingFrame = PingStompFrame()
             self?.sendFrame(frame: pingFrame)
         }
     }
-    
+
     private func sendDisconnectFrame() {
         heartBeat?.pongAction = { [weak self] in
             let disconnectFrame = DisconnectStompFrame()
             self?.sendFrame(frame: disconnectFrame)
         }
     }
-    
+
     ///Open webSocket connection
     public func openWebSocketConnection() {
         webSocket.connect()
     }
-    
+
     ///Close webSocket connection
     public func closeWebSocketConnection() {
         webSocket.disconnect(code: .normalClosure, reason: nil)
@@ -69,50 +69,50 @@ public class SwiftStompClient {
     ///     - body: body for frame if needed
     public func sendFrame(frame: StompFrameProtocol) {
         var stompFrame = String()
-        
+
         //add command
         stompFrame.append(frame.command + "\n")
-        
+
         //add headers
         frame.headers.forEach({
             stompFrame.append($0.key + ":" + $0.value + "\n")
         })
-        
+
         stompFrame.append("\n")
-        
+
         //add body if exist
         if let body = frame.body {
             stompFrame.append("\n" + body)
         }
-        
+
         //add control char
         stompFrame.append(BasicCommands.controlChar)
-        
+
         webSocket.webSocketSend(message: .string(stompFrame), onResult: { [weak stompDelegate] in
             stompDelegate?.clientSendFrame(result: $0)
         })
     }
-    
+
     ///Handle server frames with heart-beat implementation
-    private func receiveFrame(commands: String, headers: [String : String], body: String? = nil) {
+    private func receiveFrame(commands: String, headers: [String: String], body: String? = nil) {
         guard let command = FrameResponseKeys(rawValue: commands) else {
             print("ERROR FRAME HANDLING COMMAND: \(commands), HEADERS: \(headers), BODY: \(body?.description ?? "empty body")")
             return
         }
-        stompDelegate?.clientReciveFrame(stomp: self, frameType: command, headers: headers, body: body)
+        stompDelegate?.clientReceiveFrame(stomp: self, frameType: command, headers: headers, body: body)
         heartBeat?.handleFrames(headers: headers, frame: command)
     }
-    
+
     ///Decode string on fragments command, headers, body
     private func decodeString(webSocketString: String) {
         var headers = [String: String]()
         var body = String()
-        
+
         //handling ping frame
         guard webSocketString == "\n" else {
             var hasHeaders = true
             var contents = webSocketString.components(separatedBy: "\n")
-            
+
             if contents.first == "" {
                 contents.removeFirst()
             }
@@ -121,10 +121,10 @@ public class SwiftStompClient {
                 print("current decoded string doesn't containe any command")
                 return
             }
-            
+
             //remove command after reading
             contents.removeFirst()
-                
+
             contents.forEach({
                 if hasHeaders && !$0.isEmpty {
                     let headersComponents = $0.components(separatedBy: ":")
@@ -141,7 +141,7 @@ public class SwiftStompClient {
         }
         receiveFrame(commands: "\n", headers: headers, body: body)
     }
-    
+
     ///Handle webSocket responce
     /// - Parameters:
     ///     - responce: data, string or error
@@ -170,11 +170,11 @@ extension SwiftStompClient: WebSocketProtocol {
     public func handleConnect(session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol: String?) {
         stompDelegate?.handleWebSocketConnect(session: session, webSocketTask: webSocketTask, didOpenWithProtocol: didOpenWithProtocol)
     }
-    
+
     public func handleDisconnect(session: URLSession, webSocketTask: URLSessionWebSocketTask, closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         stompDelegate?.handleWebSocketDisconnect(session: session, webSocketTask: webSocketTask, closeCode: closeCode, reason: reason)
     }
-    
+
     public func handleResponse(result: Result<URLSessionWebSocketTask.Message, Error>) {
         handleWebSocketResult(responce: result)
         stompDelegate?.handleWebSocketResponse(result: result)
