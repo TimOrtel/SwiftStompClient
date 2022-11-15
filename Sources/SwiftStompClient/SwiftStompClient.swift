@@ -85,8 +85,11 @@ public class SwiftStompClient {
             stompFrame.append("\n" + body)
         }
 
-        //add control char
-        stompFrame.append(BasicCommands.controlChar)
+        if !(frame is PingStompFrame) {
+            //add control char
+
+            stompFrame.append(BasicCommands.controlChar)
+        }
 
         webSocket.webSocketSend(message: .string(stompFrame), onResult: { [weak stompDelegate] in
             stompDelegate?.clientSendFrame(result: $0)
